@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Public Works Retro Desktop</title>
+  <!-- FAVICON -->
+  <link rel="icon" href="assets/logo.png" type="image/png"/>
+  <!-- RETRO FONT -->
+  <link href="https://fonts.cdnfonts.com/css/press-start-2p" rel="stylesheet"/>
+  <style>
+    /* ===========================================================================
+       VARIABLES & COLOR PALETTE
+       =========================================================================== */
+    :root {
+      --desktop-bg:        #F2EBD5;    /* your original desktop color */
+      --window-face:       #C3C7CB;
+      --border-light:      #FFF;
+      --border-shade:      #808080;
+      --highlight-border:  #A4A9AD;
+      --titlebar-blue:     #000080;
+      --menu-face:         #E0E0E0;
+      --taskbar-face:      #C0C0C0;
+
+      --text-dark:         #000;
+      --text-light:        #FFF;
+
+      --font-retro:        'MS Sans Serif', sans-serif; /* Change font to MS Sans Serif */
+    }
+
+    /* ===========================================================================
+       GLOBAL RESET & BODY
+       =========================================================================== */
+    * { box-sizing: border-box; margin:0; padding:0; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b4a30557-d52f-4b80-8f92-72942d71184d/dg2l0ly-ccc33224-2f9d-4c21-998b-5d8357391c51.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2I0YTMwNTU3LWQ1MmYtNGI4MC04ZjkyLTcyOTQyZDcxMTg0ZFwvZGcybDBseS1jY2MzMzIyNC0yZjlkLTRjMjEtOTk4Yi01ZDgzNTczOTFjNTEuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.NnTuV7f-iFJa2LyrgKV0l1h5tu0yB7_t6xw9vQL8l4Q') no-repeat center center fixed;
+      background-size: cover; /* Ensure the image covers the entire background */
+      font-family: var(--font-retro);
+      color: var(--text-dark);
+      position: relative;
+    }
+
+    /* ===========================================================================
+       DESKTOP CENTRAL LOGO (behind everything)
+       =========================================================================== */
+    #logo {
+      position: absolute;
+      top: 60%; left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 50%;
+      height: auto;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity 0.2s;
+    }
+
+    /* ===========================================================================
+       DESKTOP ICONS
+       =========================================================================== */
+    #desktop {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 32px;
+      display: grid;
+      grid-template-columns: repeat(2, 80px); /* Adjust desktop icons to vertical arrangement with two columns */
+      grid-auto-rows: 100px;
+      gap: 10px; /* Set gap between columns */
+      padding: 16px;
+      overflow-y: auto;
+      z-index: 1;
+    }
+    /* 1) Only desktop icons are absolute */
+#desktop .icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  /* hover/active, etc… */
+}
+
+/* 2) In project-works container, icons are static so the grid/flex can work */
+#project-works-content .icon {
+  position: static;    /* ← let the grid or flex layout control it */
+  display: flex;       /* if you still need flex inside each cell */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+    .icon:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .icon:active {
+      transform: scale(0.95); /* Button press animation */
+    }
+    .icon img {
+      width: 48px; height: 48px;
+    }
+    .icon span {
+      margin-top: 4px;
+      font-size: 10px;
+      color: var(--text-dark);
+    }
+
+    /* ===========================================================================
+       TASKBAR & BUTTON STYLES
+       =========================================================================== */
+    #taskbar {
+      position: absolute; left:0; right:0; bottom:0;
+      height:32px;
+      background: var(--taskbar-face);
+      border-top:2px solid var(--border-shade);
+      display:flex; align-items:center; padding:0 4px;
+      z-index:1001;
+    }
+    .tb-button, #start-btn, #mute-btn, #settings-btn {
+      display: flex;
+      align-items: center;
+      margin-right: 4px;
+      padding: 2px 6px;
+      font-size: 10px;
+      background: var(--menu-face);
+      border-top: 2px solid var(--border-light);
+      border-left: 2px solid var(--border-light);
+      border-bottom: 2px solid var(--border-shade);
+      border-right: 2px solid var(--border-shade);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s;
+    }
+    .tb-button:active,
+    #start-btn:active,
+    #mute-btn:active,
+    #settings-btn:active {
+      transform: scale(0.95); /* Button press animation */
+    }
+    .tb-button img,
+    #start-btn img,
+    #mute-btn img,
+    #settings-btn img {
+      width:16px; height:16px; margin-right:4px;
+    }
+    #taskbar-spacer { flex:1; }
+    #taskbar-time {
+      font-size:10px; margin-right:8px;
+      color: var(--text-dark);
+    }
+
+    /* ===========================================================================
+       START MENU
+       =========================================================================== */
+    #start-menu {
+      position:absolute; bottom:32px; left:4px;
+      width:220px;
+      height: 350px;
+      background: #C3C3C3;
+      border-top:2px solid var(--border-light);
+      border-left:20px solid #867D7F; /* Add 10px wide light grey left border */
+      border-bottom:2px solid var(--border-shade);
+      border-right:2px solid var(--border-shade);
+      display:none; z-index:1002;
+      user-select:none;
+    }
+    #start-menu.open { display:block; }
+    #start-menu ul {
+      list-style: none;
+      padding-top: 10px;
+      margin: 0;
+      gap: 7px; /* Add 7px gap between list items */
+      display: flex;
+      flex-direction: column;
+    }
+    #start-menu li {
+      display:flex; align-items:center;
+      padding:12px 8px; height:24px;
+      cursor:pointer; font-size:10px;
+      transition: background 0.1s;
+      color: var(--text-dark);
+    }
+    #start-menu li:hover {
+      background: var(--titlebar-blue);
+      color: var(--text-light);
+    }
+    #start-menu li img { width:16px; height:16px; margin-right:6px; }
+
+    /* ===========================================================================
+       WINDOW CHROME & SHADOWS
+       =========================================================================== */
+    .window {
+      position:absolute;
+      background:#C3C3C3;
+      border-top:2px solid var(--border-light);
+      border-left:1px solid #808080; /* Add thin grey left border */
+      border-bottom:2px solid var(--border-shade);
+      border-right:2px solid var(--border-shade);
+      box-shadow:
+        2px 2px 0 var(--border-shade),    /* bottom shadow */
+       -3px -3px 0 var(--border-light);   /* top/left shadow */
+      display:none; overflow:hidden;
+      z-index:1000;
+    }
+    .win-title {
+      display:flex; align-items:center; justify-content:space-between;
+      background: var(--titlebar-blue);
+      color: var(--text-light);
+      height:24px; padding:0 4px; font-size:10px;
+      border-bottom:2px solid var(--border-shade);
+      cursor:move; user-select:none;
+      box-shadow:inset 1px 1px 0 var(--border-shade);
+    }
+    .title-tools {
+      display: flex !important; align-items:center;
+    }
+    .title-tools .btn {
+      width:18px; height:18px; margin-left:2px;
+      display:flex; align-items:center; justify-content:center;
+      background: var(--menu-face);
+      border-top:2px solid var(--border-light);
+      border-left:2px solid var(--border-light);
+      border-bottom:2px solid var(--border-shade);
+      border-right:2px solid var(--border-shade);
+      cursor:pointer; font-size:10px; user-select:none;
+      transition: background 0.1s;
+      color: #808080; /* Change button content color to grey */
+    }
+    .title-tools .btn:hover {
+      background: var(--highlight-border);
+    }
+    .title-tools .btn span { font-weight:bold; }
+
+    .menu-bar {
+      display: flex;
+      background: var(--menu-face);
+      padding: 4px;
+      border-bottom: 2px solid var(--border-shade);
+    }
+    .menu-bar div {
+      margin-right: 8px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .window-status {
+      background: var(--menu-face);
+      padding: 4px;
+      font-size: 10px;
+      border-top: 2px solid var(--border-light);
+      border-left: 2px solid var(--border-light);
+      border-bottom: 2px solid var(--border-shade);
+      border-right: 2px solid var(--border-shade);
+    }
+
+    /* ===========================================================================
+       WINDOW CONTENT
+       =========================================================================== */
+    .window-content {
+      background: #FFF;
+      padding: 8px;
+      font-size: 10px;
+      top: 48px;
+      bottom: 24px;
+      overflow-y: scroll; /* Always show vertical scrollbar */
+      height: calc(100% - 72px);
+      color: var(--text-dark);
+    }
+    .window-content h3 {
+      font-size:12px; margin:12px 0 4px;
+    }
+    .window-content p {
+      margin-bottom:6px; line-height:1.2;
+    }
+    .action-btn {
+      display:inline-block; margin-top:6px;
+      padding:2px 6px; font-size:10px;
+      background: var(--menu-face);
+      border-top:2px solid var(--border-light);
+      border-left:2px solid var(--border-light);
+      border-bottom:2px solid var(--border-shade);
+      border-right:2px solid var(--border-shade);
+      cursor:pointer; user-select:none;
+      transition: background 0.1s;
+    }
+    .action-btn:hover {
+      background: var(--highlight-border);
+    }
+
+    /* Adjust checkout button position */
+    .checkout-btn-container {
+      position: absolute;
+      bottom: 30px;
+      right: 16px;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    /* Ensure contact form visibility with proper spacing */
+    #contact-content form {
+      height: calc(100% - 20px); /* Slightly reduce form height */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 10px;
+    }
+
+    #contact-content label {
+      font-size: 9px; /* Reduce label font size */
+    }
+
+    #contact-content input,
+    #contact-content textarea {
+      font-size: 9px; /* Reduce input and textarea font size */
+      padding: 3px; /* Reduce padding */
+    }
+
+    #contact-content textarea {
+      height: 50px; /* Reduce textarea height */
+    }
+
+    #contact-content button {
+      margin-bottom: 50px;
+      font-size: 9px; /* Reduce button font size */
+      padding: 3px 6px; /* Adjust button padding */
+    }
+
+    /* Add scrollbar to contact window content */
+    #contact-content {
+      overflow-y: auto; /* Enable vertical scrolling */
+      height: calc(100% - 72px); /* Adjust height to fit within the window */
+    }
+
+    /* ===========================================================================
+       SEARCH BAR
+       =========================================================================== */
+    .search-bar { display:flex; margin-bottom:8px; }
+    .search-bar input {
+      flex:1; padding:4px; font-size:10px;
+      border:2px inset var(--border-shade);
+      background:#FFF; font-family:var(--font-retro);
+      color:var(--text-dark);
+    }
+    .search-bar div {
+      display:flex; align-items:center; justify-content:center;
+      margin-left:4px; padding:4px;
+      background: var(--menu-face);
+      border-top:2px solid var(--border-light);
+      border-left:2px solid var(--border-light);
+      border-bottom:2px solid var(--border-shade);
+      border-right:2px solid var(--border-shade);
+      cursor:pointer; user-select:none;
+      transition: background 0.1s;
+    }
+    .search-bar div:hover {
+      background: var(--highlight-border);
+    }
+    .search-bar img { width:16px; height:16px; }
+
+    /* ===========================================================================
+       CONTACT FORM
+       =========================================================================== */
+    #contact-content form {
+      display:flex; flex-direction:column; margin-top:8px;
+    }
+    #contact-content label {
+      font-size:10px; margin:4px 0 2px;
+    }
+    #contact-content input,
+    #contact-content textarea {
+      padding:4px; margin-bottom:6px;
+      font-size:10px; border:2px inset var(--border-shade);
+      background:#FFF; font-family:var(--font-retro);
+      color:var(--text-dark);
+    }
+    #contact-content textarea { resize:vertical; height:60px; }
+    #contact-content button {
+      align-self:flex-start; padding:4px 8px; font-size:10px;
+      background: var(--menu-face);
+      border-top:2px solid var(--border-light);
+      border-left:2px solid var(--border-light);
+      border-bottom:2px solid var(--border-shade);
+      border-right:2px solid var(--border-shade);
+      cursor:pointer; user-select:none;
+      transition: background 0.1s;
+    }
+    #contact-content button:hover {
+      background: var(--highlight-border);
+    }
+
+    /* ===========================================================================
+       FAQ ACCORDION
+       =========================================================================== */
+    .faq-item { margin-bottom:8px; }
+    .faq-question {
+      padding:4px; background: var(--menu-face);
+      border:2px solid var(--border-shade);
+      font-size:10px; cursor:pointer; user-select:none;
+      transition: background 0.1s;
+    }
+    .faq-question:hover {
+      background: var(--highlight-border);
+    }
+    .faq-answer {
+      padding:4px; background:#FFF;
+      border:1px solid var(--border-shade);
+      font-size:10px; display:none;
+    }
+
+    /* ===========================================================================
+       PROJECT WORKS CONTENT
+       =========================================================================== */
+    #project-works-content {
+      display: grid;
+      grid-template-columns: repeat(3, 100px); /* Ensure 3 columns for horizontal alignment */
+      grid-auto-rows: 120px;                   /* Each row is 120px tall */
+      gap: 16px;                               /* 16px gap between items */
+      justify-items: start;                    /* Align items to the left */
+      align-items: start;                      /* Align items to the top */
+      padding: 16px;
+    }
+
+    /* ===========================================================================
+       RESPONSIVE (MOBILE)
+       =========================================================================== */
+    @media (max-width:768px) {
+      html, body { font-size:0.8rem; overflow:hidden; }
+      #desktop {
+        grid-template-columns:repeat(2,1fr);
+        overflow-y:auto;
+      }
+      #logo { display:none!important; }
+
+      #taskbar {
+        height:48px; padding:0 8px;
+        justify-content:space-between;
+      }
+      #taskbar-time { display:none; }
+      #start-btn span,
+      .tb-button span,
+      #mute-btn span,
+      #settings-btn span { display:none; }
+
+      #start-menu {
+        top:0; bottom:auto; left:0; right:0;
+        width:100%; height:auto;
+      }
+      #start-menu li {
+        padding:10px 14px; height:auto; font-size:10px;
+      }
+      #start-menu li img {
+        width:20px; height:20px; margin-right:10px;
+      }
+
+      .window {
+        width:90vw!important; height:80vh!important;
+        max-width:none; max-height:none;
+        left:50%!important; top:50%!important;
+        transform:translate(-50%, -50%)!important;
+      }
+      .win-title {
+        height:28px; font-size:8px; padding:0 6px;
+      }
+      .window-content {
+        padding:10px; font-size:8px;
+      }
+      .title-tools .btn {
+        width:22px; height:22px; margin-left:3px;
+      }
+      .title-tools .btn span {
+        line-height:22px;
+      }
+    }
+    /* PROJECT WORKS GRID: top-left → right, Alpha first */
+#project-works-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 100px); /* each “cell” 100px wide */
+  grid-auto-rows:    120px;                        /* each “row” 120px tall */
+  gap:               16px;                         /* 16px gutter on all sides */
+  justify-items:     start;                        /* cell contents start at left */
+  align-items:       start;                        /* cell contents start at top */
+  padding:           16px;
+}
+
+  </style>
+</head>
+<body>
+  <!-- DESKTOP ICONS -->
+  <div id="desktop"></div>
+
+  <!-- CENTRAL BACKGROUND LOGO -->
+  <img id="logo" src="assets/logo.png" alt="Logo"/>
+
+  <!-- TASKBAR -->
+  <div id="taskbar">
+    <div id="start-btn"><img src="assets/logo.png" alt="Start"/><span>HOME</span></div>
+    <div id="project-works-tab" class="tb-button"><img src="https://i.ibb.co/tZPbS79/95.png" alt="Project Works"/><span>Project Works</span></div>
+    <div id="taskbar-spacer"></div>
+    <div id="mute-btn"><img id="mute-icon" src="https://img.icons8.com/fluency/48/000000/medium-volume.png" alt="Mute"/></div>
+    <div id="taskbar-time"></div>
+    <div id="settings-btn"><img src="https://img.icons8.com/fluency/48/000000/settings.png" alt="Settings"/></div>
+  </div>
+
+  <!-- START MENU -->
+  <div id="start-menu">
+    <ul></ul>
+  </div>
+
+  <script>
+    const data = {
+      home: [
+        { title:'Welcome to Public Works Inc.', description:'We deliver retro-chic infrastructure solutions since 1995.' },
+        { title:'Mission',                         description:'To blend classic aesthetics with modern functionality across every project.' },
+        { title:'Vision',                          description:'A world where every public space feels like a nostalgic journey.' }
+      ],
+      about: [
+        { title:'Our Origins',    description:'Founded by engineers who loved the simplicity of early GUI designs.' },
+        { title:'Timeline',       description:'In 2000 we launched our first project. In 2010 we expanded globally.' },
+        { title:'Leadership',     description:'Led by a team passionate about design, usability, and community.' }
+      ],
+      companies: [
+        { title:'BuildRight LLC',   description:'Specializes in structural integrity and classic design.' },
+        { title:'GreenGrid Corp.',  description:'Pioneers of eco-friendly retro public parks.' },
+        { title:'UrbanPixel',       description:'Integrates pixel-art aesthetics into city planning.' }
+      ],
+      'project-works': [
+        { title:'#1 Alpha',    description:'Renovation of central plaza with vintage neon fixtures.' },
+        { title:'#2 Bravo',    description:'Restoration of historic city hall façade.' },
+        { title:'#3 Charlie',  description:'Digital kiosk network in 1990s arcade style.' }
+      ],
+      services: [
+        { title:'Design Consulting', description:'Expert guidance on retro-inspired layouts.' },
+        { title:'Construction',      description:'Hands-on building with period-accurate materials.' },
+        { title:'Maintenance',       description:'Keep your installations running like an old-school PC.' }
+      ],
+      settings: {
+        contact: {
+          title:'Contact Info',
+          description:'Email: support@publicworksretro.com • Phone: +1-800-RETRO-95'
+        },
+        faq: [
+          { q:'What is Public Works Inc.?', a:'Public Works Inc. is a heritage-inspired infrastructure firm blending retro aesthetics with modern engineering.' },
+          { q:'How can I request a project quote?', a:'Click Services, choose Construction, then use the Contact form to send your project details for a personalized estimate.' },
+          { q:'Do you offer eco-friendly materials?', a:'Yes—GreenGrid Corp partners ensure all installations use sustainable and period-accurate materials.' },
+          { q:'Can I tour past projects?', a:'Schedule a site visit by emailing support@publicworksretro.com with “Tour Request” in the subject line.' },
+          { q:'How do I report an issue?', a:'Use the Help window and click “Contact Support” or fill out the Contact form to report any maintenance issue.' }
+        ],
+        resources: {
+          title:'Other Resources',
+          description:'User guides, API docs, and more at /resources.'
+        }
+      },
+      help: [
+        { title:'Getting Started',   description:'Open the Home button and click any icon to launch.' },
+        { title:'Troubleshooting',   description:'If a window is unresponsive, click the X button twice.' },
+        { title:'Contact Support',   description:'Use the Contact dialog to send us an email or call.' }
+      ],
+      contact: [
+        { title:'Email',    description:'support@publicworksretro.com' },
+        { title:'Phone',    description:'+1-800-RETRO-95' },
+        { title:'Address',  description:'123 Vintage Blvd, Nostalgia City, PX 1995' }
+      ]
+    };
+
+    // Define a uniform icon map for all instances
+    const iconMap = {
+      home: 'assets/logo.png',
+      about: 'https://storage.googleapis.com/multi-static-content/thumbs/artage-io-thumb-46865a8913c740ed5116607c60342e1f.png',
+      companies: 'https://storage.googleapis.com/multi-static-content/thumbs/artage-io-thumb-52dd0f9399208b628a1ea367999fd7b8.png',
+      'project-works': 'https://i.ibb.co/tZPbS79/95.png',
+      services: 'https://storage.googleapis.com/multi-static-content/thumbs/artage-io-thumb-af2f7285219f20bc94ee11467f71bc59.png',
+      settings: 'https://storage.googleapis.com/multi-static-content/thumbs/artage-io-thumb-43bf3d472be9b45746d4323aa569497d.png',
+      find: 'https://storage.googleapis.com/multi-static-content/thumbs/artage-io-thumb-e5ea88c36e638903afd418ca26caa87a.png',
+      help: 'https://storage.googleapis.com/multi-static-content/thumbs/artage-io-thumb-a09bcb1b5b51ce9823ba78f9d5a87942.png',
+      contact: 'https://storage.googleapis.com/multi-static-content/thumbs/artage-io-thumb-0c77adee58b1ffc9120ecf09e92022e3.png'
+    };
+
+    const windowsList = ['home','about','companies','project-works','services','settings','find','help','contact'];
+    let zIndexCounter = 1000;
+
+    // Function to create desktop icons dynamically
+    function createDesktopIcons() {
+      const desktop = document.getElementById('desktop');
+      desktop.innerHTML = ''; // Clear existing icons
+
+      const icon = document.createElement('div');
+      icon.className = 'icon';
+      icon.dataset.open = 'project-works-window';
+      icon.innerHTML = `
+        <img src="https://i.ibb.co/tZPbS79/95.png" alt="Public Works" />
+        <span>Public Works</span>
+      `;
+      desktop.appendChild(icon);
+
+      // Add click event listener to open the window
+      icon.onclick = () => openWindow(icon.dataset.open);
+    }
+
+    // Ensure uniform icons in the start menu
+    function createStartMenu() {
+      const startMenu = document.getElementById('start-menu');
+      const ul = startMenu.querySelector('ul');
+      ul.innerHTML = ''; // Clear existing menu items
+      Object.keys(iconMap).forEach(key => {
+        const li = document.createElement('li');
+        li.dataset.open = `${key}-window`;
+        li.innerHTML = `
+          <img src="${iconMap[key]}" alt="${key}" />
+          <span>${key.charAt(0).toUpperCase() + key.slice(1).replace('-', ' ')}</span>
+        `;
+        ul.appendChild(li);
+      });
+
+      // Add the gallery link
+      const galleryLi = document.createElement('li');
+      galleryLi.dataset.open = 'gallery-window';
+      galleryLi.innerHTML = `
+        <img src="https://via.placeholder.com/16" alt="Gallery" />
+        <span>Gallery</span>
+      `;
+      galleryLi.onclick = () => openWindow('gallery-window');
+      ul.appendChild(galleryLi);
+
+      // Add click event listeners to the menu items
+      document.querySelectorAll('#start-menu li').forEach(li => {
+        li.onclick = e => openWindow(e.currentTarget.dataset.open);
+      });
+    }
+
+    // Update the window creation logic to use the uniform icons
+    function createWindows() {
+      windowsList.forEach(id => {
+        const win = document.createElement('div');
+        win.id = id + '-window';
+        win.className = 'window';
+
+        // Set specific size for the contact window
+        if (id === 'contact') {
+          win.style.width = '500px';
+          win.style.height = '400px';
+        } else {
+          win.style.width = '450px'; // Default width
+          win.style.height = '350px'; // Default height
+        }
+
+        win.style.zIndex = ++zIndexCounter;
+
+        const title = document.createElement('div');
+        title.className = 'win-title';
+        title.innerHTML = `<span>${id.charAt(0).toUpperCase() + id.slice(1).replace('-', ' ')}</span>`;
+        const tools = document.createElement('div');
+        tools.className = 'title-tools';
+        ['_','☐','×'].forEach(sym => {
+          const btn = document.createElement('div');
+          btn.className = 'btn';
+          btn.textContent = sym;
+          if (sym === '_') btn.onclick = () => minimize(id + '-window');
+          if (sym === '☐') btn.onclick = () => maximize(id + '-window');
+          if (sym === '×') btn.onclick = () => closeWindow(id + '-window');
+          tools.appendChild(btn);
+        });
+        title.appendChild(tools);
+        win.appendChild(title);
+
+        const menuBar = document.createElement('div');
+        menuBar.className = 'menu-bar';
+        const menuItems = ['Projects', 'Companies', 'Gallery', 'Contact', 'Help', 'FAQs'];
+        menuItems.forEach(menu => {
+          if (menu.toLowerCase() !== id) { // Prevent link to the same dialogue box
+            const menuItem = document.createElement('div');
+            menuItem.textContent = menu;
+            menuItem.onclick = () => {
+              if (menu === 'Projects') openWindow('project-works-window');
+              else if (menu === 'FAQs') openWindow('settings-window');
+              else if (menu === 'Help') openWindow('help-window');
+              else if (menu === 'Gallery') openWindow('gallery-window');
+              else openWindow(menu.toLowerCase() + '-window');
+            };
+            menuBar.appendChild(menuItem);
+          }
+        });
+        win.appendChild(menuBar);
+
+        const content = document.createElement('div');
+        content.id = id + '-content';
+        content.className = 'window-content';
+        content.style.height = 'calc(100% - 72px)'; // Adjust height to fit within the window
+        content.style.overflow = id === 'contact' ? 'visible' : 'auto'; // No scroll for contact window
+        win.appendChild(content);
+
+        const statusBar = document.createElement('div');
+        statusBar.className = 'window-status';
+        statusBar.textContent = 'Ready';
+        win.appendChild(statusBar);
+
+        document.body.appendChild(win);
+
+        if (id === 'settings') buildSettingsDialog();
+        else if (id === 'find') buildFindDialog();
+        else if (id === 'project-works') buildProjectWorksDialog();
+        else buildStandardDialog(id);
+
+        // Make the window draggable
+        makeWindowDraggable(win);
+
+        win.addEventListener('mousedown', () => {
+          win.style.zIndex = ++zIndexCounter;
+        });
+      });
+
+      // Create the gallery dialogue box
+      const galleryWin = document.createElement('div');
+      galleryWin.id = 'gallery-window';
+      galleryWin.className = 'window';
+      galleryWin.style.width = '450px'; // Match other dialogue box width
+      galleryWin.style.height = '350px'; // Match other dialogue box height
+      galleryWin.style.zIndex = ++zIndexCounter;
+
+      const galleryTitle = document.createElement('div');
+      galleryTitle.className = 'win-title';
+      galleryTitle.innerHTML = `<span>Gallery</span>`;
+      const galleryTools = document.createElement('div');
+      galleryTools.className = 'title-tools';
+      ['_','☐','×'].forEach(sym => {
+        const btn = document.createElement('div');
+        btn.className = 'btn';
+        btn.textContent = sym;
+        if (sym === '_') btn.onclick = () => minimize('gallery-window');
+        if (sym === '☐') btn.onclick = () => maximize('gallery-window');
+        if (sym === '×') btn.onclick = () => closeWindow('gallery-window');
+        galleryTools.appendChild(btn);
+      });
+      galleryTitle.appendChild(galleryTools);
+      galleryWin.appendChild(galleryTitle);
+
+      const menuBar = document.createElement('div');
+      menuBar.className = 'menu-bar';
+      ['Projects', 'Companies', 'Gallery', 'Contact', 'Help', 'FAQs'].forEach(menu => {
+        const menuItem = document.createElement('div');
+        menuItem.textContent = menu;
+        menuItem.onclick = () => openWindow(menu.toLowerCase() + '-window');
+        menuBar.appendChild(menuItem);
+      });
+      galleryWin.appendChild(menuBar);
+
+      const galleryContent = document.createElement('div');
+      galleryContent.className = 'window-content';
+      galleryContent.style.height = 'calc(100% - 72px)'; // Match content height of other dialogue boxes
+      galleryContent.innerHTML = `
+        <h3>Gallery</h3>
+        <p>Explore our collection of retro-inspired projects and designs.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <img src="https://via.placeholder.com/100" alt="Gallery Image 1" style="width: 100px; height: 100px;">
+          <img src="https://via.placeholder.com/100" alt="Gallery Image 2" style="width: 100px; height: 100px;">
+          <img src="https://via.placeholder.com/100" alt="Gallery Image 3" style="width: 100px; height: 100px;">
+        </div>
+      `;
+      galleryWin.appendChild(galleryContent);
+
+      const galleryStatusBar = document.createElement('div');
+      galleryStatusBar.className = 'window-status';
+      galleryStatusBar.textContent = 'Ready';
+      galleryWin.appendChild(galleryStatusBar);
+
+      galleryWin.style.borderBottom = '2px solid var(--border-shade)'; // Match bottom border with project works
+      document.body.appendChild(galleryWin);
+      makeWindowDraggable(galleryWin);
+    }
+
+    function makeWindowDraggable(win) {
+      let isDragging = false;
+      let offsetX, offsetY;
+
+      const titleBar = win.querySelector('.win-title');
+      titleBar.onmousedown = e => {
+        isDragging = true;
+        offsetX = e.clientX - win.offsetLeft;
+        offsetY = e.clientY - win.offsetTop;
+
+        document.onmousemove = moveEvent => {
+          if (isDragging) {
+            win.style.left = `${moveEvent.clientX - offsetX}px`;
+            win.style.top = `${moveEvent.clientY - offsetY}px`;
+          }
+        };
+
+        document.onmouseup = () => {
+          isDragging = false;
+          document.onmousemove = null;
+          document.onmouseup = null;
+        };
+      };
+
+      // Prevent text selection while dragging
+      titleBar.onselectstart = () => false;
+    }
+
+    function buildStandardDialog(id) {
+      const container = document.getElementById(id + '-content');
+      container.style.display = 'flex';
+      container.style.flexDirection = 'column';
+      container.style.justifyContent = 'flex-start'; // Align content to the top
+      container.style.height = '100%'; // Occupy full height of the window
+      container.style.overflowY = 'scroll'; // Enable vertical scrolling
+
+      data[id].forEach(item => {
+        const h3 = document.createElement('h3');
+        h3.textContent = item.title;
+
+        const p = document.createElement('p');
+        if (id === 'help' && item.title === 'Contact Support') {
+          // Add a link to open the contact dialogue box
+          const link = document.createElement('a');
+          link.href = '#';
+          link.textContent = item.description;
+          link.onclick = e => {
+            e.preventDefault();
+            openWindow('contact-window');
+          };
+          p.appendChild(link);
+        } else if (id !== 'contact' && item.title !== 'Contact Support') {
+          // Add links to other dialogue boxes
+          const link = document.createElement('a');
+          link.href = '#';
+          link.textContent = item.description;
+          link.onclick = e => {
+            e.preventDefault();
+            openWindow(item.title.toLowerCase().replace(/\s+/g, '-') + '-window');
+          };
+          p.appendChild(link);
+        } else {
+          p.textContent = item.description;
+        }
+
+        container.appendChild(h3);
+        container.appendChild(p);
+      });
+
+      if (id === 'contact') appendContactForm(container);
+    }
+
+    function buildSettingsDialog() {
+      const c = document.getElementById('settings-content');
+
+      const ci = data.settings.contact;
+      const hCi = document.createElement('h3'); hCi.textContent = ci.title;
+      const pCi = document.createElement('p');  pCi.textContent = ci.description;
+      c.appendChild(hCi); c.appendChild(pCi);
+
+      const hFaq = document.createElement('h3'); hFaq.textContent = 'Frequently Asked Questions';
+      c.appendChild(hFaq);
+      data.settings.faq.forEach(f => {
+        const item = document.createElement('div'); item.className = 'faq-item';
+        const q = document.createElement('div'); q.className = 'faq-question'; q.textContent = f.q;
+        const a = document.createElement('div'); a.className = 'faq-answer';   a.textContent = f.a;
+        q.onclick = () => a.style.display = a.style.display === 'block' ? 'none' : 'block';
+        item.appendChild(q); item.appendChild(a); c.appendChild(item);
+      });
+
+      const or = data.settings.resources;
+      const hOr = document.createElement('h3'); hOr.textContent = or.title;
+      const pOr = document.createElement('p');  pOr.textContent = or.description;
+      c.appendChild(hOr); c.appendChild(pOr);
+    }
+
+    function buildFindDialog() {
+      const c = document.getElementById('find-content');
+      const bar = document.createElement('div');
+      bar.className = 'search-bar';
+      bar.innerHTML = `
+        <input id="search-input" placeholder="Type to search..." />
+        <div id="search-btn"><img src="https://win98icons.alexmeub.com/icons/png/search_directory-0.png"/></div>
+      `;
+      c.appendChild(bar);
+      const results = document.createElement('div');
+      results.id = 'search-results';
+      c.appendChild(results);
+      document.getElementById('search-btn').onclick     = runSearch;
+      document.getElementById('search-input').onkeypress = e => { if (e.key === 'Enter') runSearch(); };
+    }
+    function buildProjectWorksDialog() {
+  const c = document.getElementById('project-works-content');
+  c.innerHTML = '';       // clear previous
+
+  const projects = [
+    { id: 'alpha',   label: 'Alpha'   },
+    { id: 'bravo',   label: 'Bravo'   },
+    { id: 'charlie', label: 'Charlie' }
+  ];
+
+  projects.forEach(p => {
+    const folder = document.createElement('div');
+    folder.className = 'icon';
+    folder.innerHTML = `
+      <img src="https://i.ibb.co/tZPbS79/95.png" alt="${p.label}" />
+      <span>${p.label}</span>
+    `;
+    folder.onclick = () => openProjectDialogueBox(p.id, p.label);
+    c.appendChild(folder);
+  });
+
+      // Adjust checkout button position to bottom right
+      const buttonContainer = document.createElement('div');
+      buttonContainer.className = 'checkout-btn-container';
+
+      const checkoutButton = document.createElement('button');
+      checkoutButton.className = 'action-btn';
+      checkoutButton.textContent = 'Checkout';
+      checkoutButton.onclick = runCheckout; // Trigger the checkout process
+      buttonContainer.appendChild(checkoutButton);
+
+      c.appendChild(buttonContainer);
+    }
+
+    async function runCheckout() {
+      alert('Starting the checkout process...');
+      // Simulate a checkout process
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      alert('✅ Checkout completed successfully!');
+    }
+
+    function openProjectDialogueBox(projectId, projectLabel) {
+      const existingWindow = document.getElementById(`${projectId}-window`);
+      if (existingWindow) {
+        openWindow(`${projectId}-window`);
+        return;
+      }
+      const win = document.createElement('div');
+      win.id = `${projectId}-window`;
+      win.className = 'window';
+      win.style.width = '450px';
+      win.style.height = '350px';
+      win.style.zIndex = ++zIndexCounter;
+
+      const title = document.createElement('div');
+      title.className = 'win-title';
+      title.innerHTML = `<span>${projectLabel}</span>`;
+      const tools = document.createElement('div');
+      tools.className = 'title-tools';
+      ['_','☐','×'].forEach(sym => {
+        const btn = document.createElement('div');
+        btn.className = 'btn';
+        btn.textContent = sym;
+        if (sym === '_') btn.onclick = () => minimize(`${projectId}-window`);
+        if (sym === '☐') btn.onclick = () => maximize(`${projectId}-window`);
+        if (sym === '×') btn.onclick = () => closeWindow(`${projectId}-window`);
+        tools.appendChild(btn);
+      });
+      title.appendChild(tools);
+      win.appendChild(title);
+
+      const menuBar = document.createElement('div');
+      menuBar.className = 'menu-bar';
+      ['Projects', 'Companies', 'Gallery', 'Contact', 'Help', 'FAQs'].forEach(menu => {
+        const menuItem = document.createElement('div');
+        menuItem.textContent = menu;
+        menuItem.onclick = () => openWindow(menu.toLowerCase() + '-window');
+        menuBar.appendChild(menuItem);
+      });
+      win.appendChild(menuBar);
+
+      const content = document.createElement('div');
+      content.className = 'window-content';
+      content.style.height = 'calc(100% - 72px)';
+      content.innerHTML = `
+        <h3>${projectLabel} Overview</h3>
+        <p>Details about the ${projectLabel} project overview.</p>
+        <h3>${projectLabel} History</h3>
+        <p>Details about the ${projectLabel} project history.</p>
+      `;
+      win.appendChild(content);
+
+      const statusBar = document.createElement('div');
+      statusBar.className = 'window-status';
+      statusBar.textContent = 'Ready';
+      win.appendChild(statusBar);
+
+      document.body.appendChild(win);
+
+      makeWindowDraggable(win); // Make the subfolder dialogue box draggable
+      openWindow(`${projectId}-window`);
+    }
+
+    function appendContactForm(container) {
+      const form = document.createElement('form');
+      form.innerHTML = `
+        <label for="name">Name:</label>
+        <input id="name" type="text" required />
+        <label for="email">Email:</label>
+        <input id="email" type="email" required />
+        <label for="message">Message:</label>
+        <textarea id="message"></textarea>
+        <button type="submit">Submit</button>
+      `;
+      container.appendChild(form);
+      form.onsubmit = e => {
+        e.preventDefault();
+        alert('Thanks, ' + form.name.value + '! We got your message.');
+        form.reset();
+      };
+    }
+
+    function openWindow(id) {
+      document.getElementById('logo').style.display = 'none';
+      const w = document.getElementById(id);
+      w.style.display = 'block';
+      center(w);
+      w.style.zIndex = ++zIndexCounter;
+
+      // Automatically maximize the contact window and disable resizing
+      if (id === 'contact-window') {
+        maximize(id);
+        w.querySelector('.title-tools .btn:nth-child(2)').style.display = 'none'; // Hide maximize button
+      }
+
+      activateTask(id);
+    }
+
+    function closeWindow(id) {
+      const w = document.getElementById(id);
+      w.style.display = 'none';
+      const tb = document.getElementById(id + '-task');
+      if (tb) tb.remove();
+      if (!windowsList.some(k => document.getElementById(k + '-window').style.display === 'block')) {
+        document.getElementById('logo').style.display = '';
+      }
+    }
+
+    function minimize(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function maximize(id) {
+      const w = document.getElementById(id);
+      w.style.width = '700px';
+      w.style.height = '500px';
+      w.style.top = '50%';
+      w.style.left = '50%';
+      w.style.transform = 'translate(-50%, -50%)';
+      w.style.borderBottom = '2px solid var(--border-shade)';
+    }
+
+    function center(el) {
+      el.style.top = '50%';
+      el.style.left = '50%';
+      el.style.transform = 'translate(-50%, -50%)';
+    }
+
+    function activateTask(winId) {
+      const base = winId.replace('-window', '');
+      if (base === 'home' || base === 'start-menu') return;
+
+      // Prevent adding a duplicate taskbar button for "Project Works"
+      if (base === 'project-works') return;
+
+      if (document.getElementById(winId + '-task')) return;
+      const btn = document.createElement('div');
+      btn.id = winId + '-task';
+      btn.className = 'tb-button';
+      btn.innerHTML = `<img src="${iconMap[base]}"/><span>${base.charAt(0).toUpperCase() + base.slice(1).replace('-', ' ')}</span>`;
+      btn.onclick = () => {
+        const w = document.getElementById(winId);
+        if (w.style.display === 'block') w.style.zIndex = ++zIndexCounter;
+        else openWindow(winId);
+      };
+      document.getElementById('taskbar-spacer').before(btn);
+    }
+
+    document.getElementById('start-btn').onclick = e => {
+      e.stopPropagation();
+      const m = document.getElementById('start-menu');
+      m.classList.toggle('open');
+    };
+
+    document.onclick = () => {
+      document.getElementById('start-menu').classList.remove('open');
+    };
+
+    let muted = false;
+    document.getElementById('mute-btn').onclick = () => {
+      muted = !muted;
+      document.getElementById('mute-icon').src = muted
+        ? 'https://img.icons8.com/fluency/48/000000/mute.png'
+        : 'https://img.icons8.com/fluency/48/000000/medium-volume.png';
+    };
+
+    setInterval(() => {
+      document.getElementById('taskbar-time').textContent =
+        new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }, 1000);
+
+    document.getElementById('settings-btn').onclick = () => openWindow('settings-window');
+    document.getElementById('project-works-tab').onclick = () => openWindow('project-works-window');
+
+    function runSearch() {
+      const term = document.getElementById('search-input').value.trim().toLowerCase();
+      const out = document.getElementById('search-results');
+      out.innerHTML = '';
+      if (!term) {
+        out.innerHTML = '<p>Enter a term and click 🔍</p>';
+        return;
+      }
+      let found = 0;
+      windowsList.filter(w => w !== 'find').forEach(cat => {
+        data[cat].forEach(item => {
+          if (item.title.toLowerCase().includes(term) || item.description.toLowerCase().includes(term)) {
+            const h = document.createElement('h3');
+            h.textContent = `${item.title} (${cat.charAt(0).toUpperCase() + cat.slice(1).replace('-', ' ')})`;
+            const p = document.createElement('p');
+            p.textContent = item.description;
+            out.appendChild(h);
+            out.appendChild(p);
+            found++;
+          }
+        });
+      });
+      if (found === 0) out.innerHTML = '<p>No results found.</p>';
+    }
+
+    async function runCheckout() {
+      const btn = document.getElementById('checkout-btn');
+      btn.disabled = true;
+      await playSound('cough');
+      await playSound('whirr');
+      await playSound('buzz');
+      alert('✅ Order Processed!');
+      btn.disabled = false;
+    }
+
+    function playSound(id) {
+      return new Promise(res => {
+        const a = document.getElementById(id);
+        if (!a) return res();
+        a.currentTime = 0;
+        a.play();
+        a.onended = res;
+      });
+    }
+
+    window.onload = () => {
+      createWindows();
+      createDesktopIcons();
+      createStartMenu();
+    };
+  </script>
+  <!-- Hidden sound elements (cough, whirr, buzz) -->
+  <audio id="cough" src="assets/sounds/cough.mp3"></audio>
+  <audio id="whirr" src="assets/sounds/whirr.mp3"></audio>
+  <audio id="buzz"  src="assets/sounds/buzz.mp3"></audio>
+</body>
+</html>
