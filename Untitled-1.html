@@ -25,7 +25,7 @@
       --text-dark:         #000;
       --text-light:        #FFF;
 
-      --font-retro:        'MS Sans Serif', sans-serif; /* Change font to MS Sans Serif */
+      --font-retro:        'MS Sans Serif', sans-serif; /* Set font to Windows 95 MS Sans Serif */
     }
 
     /* ===========================================================================
@@ -37,7 +37,7 @@
       overflow: hidden;
       background: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b4a30557-d52f-4b80-8f92-72942d71184d/dg2l0ly-ccc33224-2f9d-4c21-998b-5d8357391c51.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2I0YTMwNTU3LWQ1MmYtNGI4MC04ZjkyLTcyOTQyZDcxMTg0ZFwvZGcybDBseS1jY2MzMzIyNC0yZjlkLTRjMjEtOTk4Yi01ZDgzNTczOTFjNTEuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.NnTuV7f-iFJa2LyrgKV0l1h5tu0yB7_t6xw9vQL8l4Q') no-repeat center center fixed;
       background-size: cover; /* Ensure the image covers the entire background */
-      font-family: var(--font-retro);
+      font-family: var(--font-retro); /* Apply the font globally */
       color: var(--text-dark);
       position: relative;
     }
@@ -114,23 +114,68 @@
       height:32px;
       background: var(--taskbar-face);
       border-top:2px solid var(--border-shade);
-      display:flex; align-items:center; padding:0 4px;
+      display:flex; align-items:center; justify-content:space-between; /* Ensure proper alignment */
+      padding:0 4px;
       z-index:1001;
     }
-    .tb-button, #start-btn, #mute-btn, #settings-btn {
+    .tb-button, #start-btn, #settings-btn {
       display: flex;
       align-items: center;
       margin-right: 4px;
       padding: 2px 6px;
       font-size: 10px;
       background: var(--menu-face);
-      border-top: 2px solid var(--border-light);
+      border-top: 2px solid #F6F6F6; /* Update top border color */
       border-left: 2px solid var(--border-light);
-      border-bottom: 2px solid var(--border-shade);
-      border-right: 2px solid var(--border-shade);
+      border-bottom: 2px solid #272727; /* Update bottom border color */
+      border-right: 2px solid #F6F6F6; /* Update right border color */
       cursor: pointer;
       user-select: none;
       transition: transform 0.1s;
+    }
+    #start-btn {
+      border: 2px solid #797878; /* Main outer grey border */
+      border-top: 2px solid #010101; /* Top border color */
+      border-left: 1px solid #010101; /* Left border color */
+      box-shadow: 2px 2px 0px rgba(255, 255, 255, 0.956); /* Add shadow for lifted effect */
+      position: relative; /* Required for internal border */
+      margin-right: 0.2px; /* Bring closer to the public works button */
+    }
+    #start-btn::before {
+      content: '';
+      position: absolute;
+      top: 4px; /* Adjust to create spacing for the internal border */
+      left: 4px;
+      right: 4px;
+      bottom: 4px;
+      border: 1px dotted #6C6C6C; /* Internal dotted border */
+      pointer-events: none; /* Ensure it doesn't interfere with clicks */
+    }
+    #start-btn:active {
+      transform: scale(0.95); /* Button press animation */
+    }
+    #taskbar-right {
+      display: flex;
+      align-items: center;
+      gap: 4px; /* Add spacing between elements */
+      border: 2px solid #797878; /* Main border for speaker and clock */
+      padding: 2px 6px; /* Adjust padding */
+      box-shadow: none; /* Remove shadow */
+    }
+    #mute-btn {
+      margin: 0; /* Remove any margin */
+      border: none; /* Remove border */
+      box-shadow: none; /* Remove shadow */
+    }
+    #mute-btn img {
+      src: url('assets/speaker.png'); /* Replace speaker image source */
+    }
+    #taskbar-time {
+      font-size:10px; margin-right:8px;
+      color: var(--text-dark);
+    }
+    #project-works-tab {
+      margin-left: 3px; /* Bring closer to the home button */
     }
     .tb-button:active,
     #start-btn:active,
@@ -144,11 +189,7 @@
     #settings-btn img {
       width:16px; height:16px; margin-right:4px;
     }
-    #taskbar-spacer { flex:1; }
-    #taskbar-time {
-      font-size:10px; margin-right:8px;
-      color: var(--text-dark);
-    }
+    #taskbar-spacer { flex:2; }
 
     /* ===========================================================================
        START MENU
@@ -160,8 +201,8 @@
       background: #C3C3C3;
       border-top:2px solid var(--border-light);
       border-left:20px solid #867D7F; /* Add 10px wide light grey left border */
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-bottom:2px solid #0C0C0C; /* Update bottom border color */
+      border-right:2px solid #0C0C0C;  /* Update right border color */
       display:none; z-index:1002;
       user-select:none;
     }
@@ -180,7 +221,7 @@
       cursor:pointer; font-size:10px;
       transition: background 0.1s;
       color: var(--text-dark);
-    }
+    } 
     #start-menu li:hover {
       background: var(--titlebar-blue);
       color: var(--text-light);
@@ -193,10 +234,10 @@
     .window {
       position:absolute;
       background:#C3C3C3;
-      border-top:2px solid var(--border-light);
+      border-top:2px solid #F6F6F6; /* Update top border color */
       border-left:1px solid #808080; /* Add thin grey left border */
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-bottom:2px solid #0C0C0C; /* Update bottom border color */
+      border-right:2px solid #F6F6F6; /* Update right border color */
       box-shadow:
         2px 2px 0 var(--border-shade),    /* bottom shadow */
        -3px -3px 0 var(--border-light);   /* top/left shadow */
@@ -219,10 +260,10 @@
       width:18px; height:18px; margin-left:2px;
       display:flex; align-items:center; justify-content:center;
       background: var(--menu-face);
-      border-top:2px solid var(--border-light);
+      border-top:2px solid #F6F6F6; /* Update top border color */
       border-left:2px solid var(--border-light);
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-bottom:2px solid #0C0C0C; /* Update bottom border color */
+      border-right:2px solid #F6F6F6; /* Update right border color */
       cursor:pointer; font-size:10px; user-select:none;
       transition: background 0.1s;
       color: #808080; /* Change button content color to grey */
@@ -236,7 +277,9 @@
       display: flex;
       background: var(--menu-face);
       padding: 4px;
-      border-bottom: 2px solid var(--border-shade);
+      border-bottom: 2px solid #0C0C0C; /* Update bottom border color */
+      border-top: 2px solid #F6F6F6; /* Update top border color */
+      border-right: 2px solid #F6F6F6;  /* Update right border color */
     }
     .menu-bar div {
       margin-right: 8px;
@@ -248,10 +291,10 @@
       background: var(--menu-face);
       padding: 4px;
       font-size: 10px;
-      border-top: 2px solid var(--border-light);
+      border-top: 2px solid #F6F6F6; /* Update top border color */
       border-left: 2px solid var(--border-light);
-      border-bottom: 2px solid var(--border-shade);
-      border-right: 2px solid var(--border-shade);
+      border-bottom: 2px solid #0C0C0C; /* Update bottom border color */
+      border-right: 2px solid #F6F6F6;  /* Update right border color */
     }
 
     /* ===========================================================================
@@ -277,10 +320,10 @@
       display:inline-block; margin-top:6px;
       padding:2px 6px; font-size:10px;
       background: var(--menu-face);
-      border-top:2px solid var(--border-light);
+      border-top:2px solid #F6F6F6; /* Update top border color */
       border-left:2px solid var(--border-light);
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-bottom:2px solid #0C0C0C; /* Update bottom border color */
+      border-right:2px solid #F6F6F6; /* Update right border color */
       cursor:pointer; user-select:none;
       transition: background 0.1s;
     }
@@ -347,10 +390,10 @@
       display:flex; align-items:center; justify-content:center;
       margin-left:4px; padding:4px;
       background: var(--menu-face);
-      border-top:2px solid var(--border-light);
+      border-top:2px solid #F6F6F6; /* Update top border color */
       border-left:2px solid var(--border-light);
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-bottom:2px solid #0C0C0C; /* Update bottom border color */
+      border-right:2px solid #F6F6F6;  /* Update right border color */
       cursor:pointer; user-select:none;
       transition: background 0.1s;
     }
@@ -379,10 +422,10 @@
     #contact-content button {
       align-self:flex-start; padding:4px 8px; font-size:10px;
       background: var(--menu-face);
-      border-top:2px solid var(--border-light);
+      border-top:2px solid #F6F6F6; /* Update top border color */
       border-left:2px solid var(--border-light);
       border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-right:2px solid #F6F6F6; /* Update right border color */
       cursor:pointer; user-select:none;
       transition: background 0.1s;
     }
@@ -498,8 +541,10 @@
     <div id="start-btn"><img src="assets/logo.png" alt="Start"/><span>HOME</span></div>
     <div id="project-works-tab" class="tb-button"><img src="https://i.ibb.co/tZPbS79/95.png" alt="Project Works"/><span>Project Works</span></div>
     <div id="taskbar-spacer"></div>
-    <div id="mute-btn"><img id="mute-icon" src="https://img.icons8.com/fluency/48/000000/medium-volume.png" alt="Mute"/></div>
-    <div id="taskbar-time"></div>
+    <div id="taskbar-right">
+      <div id="mute-btn"><img id="mute-icon" src="assets/speaker.png" alt="Mute"/></div>
+      <div id="taskbar-time"></div>
+    </div>
     <div id="settings-btn"><img src="https://img.icons8.com/fluency/48/000000/settings.png" alt="Settings"/></div>
   </div>
 
@@ -740,7 +785,10 @@
       ['Projects', 'Companies', 'Gallery', 'Contact', 'Help', 'FAQs'].forEach(menu => {
         const menuItem = document.createElement('div');
         menuItem.textContent = menu;
-        menuItem.onclick = () => openWindow(menu.toLowerCase() + '-window');
+        menuItem.onclick = () => {
+          if (menu === 'FAQs') openWindow('settings-window'); // Redirect FAQ to settings dialogue box
+          else openWindow(menu.toLowerCase() + '-window');
+        };
         menuBar.appendChild(menuItem);
       });
       galleryWin.appendChild(menuBar);
@@ -1083,7 +1131,7 @@
       muted = !muted;
       document.getElementById('mute-icon').src = muted
         ? 'https://img.icons8.com/fluency/48/000000/mute.png'
-        : 'https://img.icons8.com/fluency/48/000000/medium-volume.png';
+        : 'assets/speaker.png';
     };
 
     setInterval(() => {

@@ -25,7 +25,7 @@
       --text-dark:         #000;
       --text-light:        #FFF;
 
-      --font-retro:        'MS Sans Serif', sans-serif; /* Change font to MS Sans Serif */
+      --font-retro:        'MS Sans Serif', sans-serif; /* Set font to Windows 95 MS Sans Serif */
     }
 
     /* ===========================================================================
@@ -33,10 +33,11 @@
        =========================================================================== */
     * { box-sizing: border-box; margin:0; padding:0; }
     html, body {
-      width:100%; height:100%;
-      overflow:hidden;
-      background: var(--desktop-bg);
-      font-family: var(--font-retro);
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b4a30557-d52f-4b80-8f92-72942d71184d/dg2l0ly-ccc33224-2f9d-4c21-998b-5d8357391c51.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2I0YTMwNTU3LWQ1MmYtNGI4MC04ZjkyLTcyOTQyZDcxMTg0ZFwvZGcybDBseS1jY2MzMzIyNC0yZjlkLTRjMjEtOTk4Yi01ZDgzNTczOTFjNTEuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.NnTuV7f-iFJa2LyrgKV0l1h5tu0yB7_t6xw9vQL8l4Q') no-repeat center center fixed;
+      background-size: cover; /* Ensure the image covers the entire background */
+      font-family: var(--font-retro); /* Apply the font globally */
       color: var(--text-dark);
       position: relative;
     }
@@ -69,18 +70,32 @@
       overflow-y: auto;
       z-index: 1;
     }
-    .icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: default;
-      user-select: none;
-      transition: transform 0.1s, background 0.1s;
-    }
+    /* 1) Only desktop icons are absolute */
+#desktop .icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  /* hover/active, etc… */
+}
+
+/* 2) In project-works container, icons are static so the grid/flex can work */
+#project-works-content .icon {
+  position: static;    /* ← let the grid or flex layout control it */
+  display: flex;       /* if you still need flex inside each cell */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
     .icon:hover {
       background: rgba(255,255,255,0.3);
-      transform: translateY(-2px);
+    }
+    .icon:active {
+      transform: scale(0.95); /* Button press animation */
     }
     .icon img {
       width: 48px; height: 48px;
@@ -99,28 +114,74 @@
       height:32px;
       background: var(--taskbar-face);
       border-top:2px solid var(--border-shade);
-      display:flex; align-items:center; padding:0 4px;
-      z-index: 1001;
+      display:flex; align-items:center; justify-content:space-between; /* Ensure proper alignment */
+      padding:0 4px;
+      z-index:1001;
     }
-    .tb-button, #start-btn, #mute-btn, #settings-btn {
-      display:flex; align-items:center;
-      margin-right:4px;
-      padding:2px 6px;
-      font-size:10px;
+    .tb-button, #start-btn, #settings-btn {
+      display: flex;
+      align-items: center;
+      margin-right: 4px;
+      padding: 2px 6px;
+      font-size: 10px;
       background: var(--menu-face);
-      border-top:2px solid var(--border-light);
-      border-left:2px solid var(--border-light);
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
-      cursor:pointer; user-select:none;
-      transition: background 0.1s, transform 0.1s;
+      border-top: 2px solid #F6F6F6; /* Update top border color */
+      border-left: 2px solid var(--border-light);
+      border-bottom: 2px solid #272727; /* Update bottom border color */
+      border-right: 2px solid #F6F6F6; /* Update right border color */
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s;
     }
-    .tb-button:hover,
-    #start-btn:hover,
-    #mute-btn:hover,
-    #settings-btn:hover {
-      background: var(--highlight-border);
-      transform: translateY(-1px);
+    #start-btn {
+      border: 2px solid #797878; /* Main outer grey border */
+      border-top: 2px solid #010101; /* Top border color */
+      border-left: 1px solid #010101; /* Left border color */
+      box-shadow: 2px 2px 0px rgba(255, 255, 255, 0.956); /* Add shadow for lifted effect */
+      position: relative; /* Required for internal border */
+      margin-right: 0.2px; /* Bring closer to the public works button */
+    }
+    #start-btn::before {
+      content: '';
+      position: absolute;
+      top: 4px; /* Adjust to create spacing for the internal border */
+      left: 4px;
+      right: 4px;
+      bottom: 4px;
+      border: 1px dotted #6C6C6C; /* Internal dotted border */
+      pointer-events: none; /* Ensure it doesn't interfere with clicks */
+    }
+    #start-btn:active {
+      transform: scale(0.95); /* Button press animation */
+    }
+    #taskbar-right {
+      display: flex;
+      align-items: center;
+      gap: 4px; /* Add spacing between elements */
+      border: 2px solid #797878; /* Main border for speaker and clock */
+      padding: 2px 6px; /* Adjust padding */
+      box-shadow: none; /* Remove shadow */
+    }
+    #mute-btn {
+      margin: 0; /* Remove any margin */
+      border: none; /* Remove border */
+      box-shadow: none; /* Remove shadow */
+    }
+    #mute-btn img {
+      src: url('assets/speaker.png'); /* Replace speaker image source */
+    }
+    #taskbar-time {
+      font-size:10px; margin-right:8px;
+      color: var(--text-dark);
+    }
+    #project-works-tab {
+      margin-left: 3px; /* Bring closer to the home button */
+    }
+    .tb-button:active,
+    #start-btn:active,
+    #mute-btn:active,
+    #settings-btn:active {
+      transform: scale(0.95); /* Button press animation */
     }
     .tb-button img,
     #start-btn img,
@@ -128,11 +189,7 @@
     #settings-btn img {
       width:16px; height:16px; margin-right:4px;
     }
-    #taskbar-spacer { flex:1; }
-    #taskbar-time {
-      font-size:10px; margin-right:8px;
-      color: var(--text-dark);
-    }
+    #taskbar-spacer { flex:2; }
 
     /* ===========================================================================
        START MENU
@@ -140,12 +197,12 @@
     #start-menu {
       position:absolute; bottom:32px; left:4px;
       width:220px;
-      height: 300px;
+      height: 350px;
       background: #C3C3C3;
       border-top:2px solid var(--border-light);
       border-left:20px solid #867D7F; /* Add 10px wide light grey left border */
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-bottom:2px solid #0C0C0C; /* Update bottom border color */
+      border-right:2px solid #0C0C0C;  /* Update right border color */
       display:none; z-index:1002;
       user-select:none;
     }
@@ -164,7 +221,7 @@
       cursor:pointer; font-size:10px;
       transition: background 0.1s;
       color: var(--text-dark);
-    }
+    } 
     #start-menu li:hover {
       background: var(--titlebar-blue);
       color: var(--text-light);
@@ -177,10 +234,10 @@
     .window {
       position:absolute;
       background:#C3C3C3;
-      border-top:2px solid var(--border-light);
+      border-top:2px solid #F6F6F6; /* Update top border color */
       border-left:1px solid #808080; /* Add thin grey left border */
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-bottom:2px solid #0C0C0C; /* Update bottom border color */
+      border-right:2px solid #F6F6F6; /* Update right border color */
       box-shadow:
         2px 2px 0 var(--border-shade),    /* bottom shadow */
        -3px -3px 0 var(--border-light);   /* top/left shadow */
@@ -203,10 +260,10 @@
       width:18px; height:18px; margin-left:2px;
       display:flex; align-items:center; justify-content:center;
       background: var(--menu-face);
-      border-top:2px solid var(--border-light);
+      border-top:2px solid #F6F6F6; /* Update top border color */
       border-left:2px solid var(--border-light);
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-bottom:2px solid #0C0C0C; /* Update bottom border color */
+      border-right:2px solid #F6F6F6; /* Update right border color */
       cursor:pointer; font-size:10px; user-select:none;
       transition: background 0.1s;
       color: #808080; /* Change button content color to grey */
@@ -220,7 +277,9 @@
       display: flex;
       background: var(--menu-face);
       padding: 4px;
-      border-bottom: 2px solid var(--border-shade);
+      border-bottom: 2px solid #0C0C0C; /* Update bottom border color */
+      border-top: 2px solid #F6F6F6; /* Update top border color */
+      border-right: 2px solid #F6F6F6;  /* Update right border color */
     }
     .menu-bar div {
       margin-right: 8px;
@@ -232,20 +291,23 @@
       background: var(--menu-face);
       padding: 4px;
       font-size: 10px;
-      border-top: 2px solid var(--border-light);
+      border-top: 2px solid #F6F6F6; /* Update top border color */
       border-left: 2px solid var(--border-light);
-      border-bottom: 2px solid var(--border-shade);
-      border-right: 2px solid var(--border-shade);
+      border-bottom: 2px solid #0C0C0C; /* Update bottom border color */
+      border-right: 2px solid #F6F6F6;  /* Update right border color */
     }
 
     /* ===========================================================================
        WINDOW CONTENT
        =========================================================================== */
     .window-content {
-      background:#FFF; padding:8px; font-size:10px;
+      background: #FFF;
+      padding: 8px;
+      font-size: 10px;
       top: 48px;
       bottom: 24px;
-      overflow:auto; height:calc(100% - 72px);
+      overflow-y: scroll; /* Always show vertical scrollbar */
+      height: calc(100% - 72px);
       color: var(--text-dark);
     }
     .window-content h3 {
@@ -258,10 +320,10 @@
       display:inline-block; margin-top:6px;
       padding:2px 6px; font-size:10px;
       background: var(--menu-face);
-      border-top:2px solid var(--border-light);
+      border-top:2px solid #F6F6F6; /* Update top border color */
       border-left:2px solid var(--border-light);
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-bottom:2px solid #0C0C0C; /* Update bottom border color */
+      border-right:2px solid #F6F6F6; /* Update right border color */
       cursor:pointer; user-select:none;
       transition: background 0.1s;
     }
@@ -328,10 +390,10 @@
       display:flex; align-items:center; justify-content:center;
       margin-left:4px; padding:4px;
       background: var(--menu-face);
-      border-top:2px solid var(--border-light);
+      border-top:2px solid #F6F6F6; /* Update top border color */
       border-left:2px solid var(--border-light);
-      border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-bottom:2px solid #0C0C0C; /* Update bottom border color */
+      border-right:2px solid #F6F6F6;  /* Update right border color */
       cursor:pointer; user-select:none;
       transition: background 0.1s;
     }
@@ -360,10 +422,10 @@
     #contact-content button {
       align-self:flex-start; padding:4px 8px; font-size:10px;
       background: var(--menu-face);
-      border-top:2px solid var(--border-light);
+      border-top:2px solid #F6F6F6; /* Update top border color */
       border-left:2px solid var(--border-light);
       border-bottom:2px solid var(--border-shade);
-      border-right:2px solid var(--border-shade);
+      border-right:2px solid #F6F6F6; /* Update right border color */
       cursor:pointer; user-select:none;
       transition: background 0.1s;
     }
@@ -388,6 +450,19 @@
       padding:4px; background:#FFF;
       border:1px solid var(--border-shade);
       font-size:10px; display:none;
+    }
+
+    /* ===========================================================================
+       PROJECT WORKS CONTENT
+       =========================================================================== */
+    #project-works-content {
+      display: grid;
+      grid-template-columns: repeat(3, 100px); /* Ensure 3 columns for horizontal alignment */
+      grid-auto-rows: 120px;                   /* Each row is 120px tall */
+      gap: 16px;                               /* 16px gap between items */
+      justify-items: start;                    /* Align items to the left */
+      align-items: start;                      /* Align items to the top */
+      padding: 16px;
     }
 
     /* ===========================================================================
@@ -441,6 +516,17 @@
         line-height:22px;
       }
     }
+    /* PROJECT WORKS GRID: top-left → right, Alpha first */
+#project-works-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 100px); /* each “cell” 100px wide */
+  grid-auto-rows:    120px;                        /* each “row” 120px tall */
+  gap:               16px;                         /* 16px gutter on all sides */
+  justify-items:     start;                        /* cell contents start at left */
+  align-items:       start;                        /* cell contents start at top */
+  padding:           16px;
+}
+
   </style>
 </head>
 <body>
@@ -455,8 +541,10 @@
     <div id="start-btn"><img src="assets/logo.png" alt="Start"/><span>HOME</span></div>
     <div id="project-works-tab" class="tb-button"><img src="https://i.ibb.co/tZPbS79/95.png" alt="Project Works"/><span>Project Works</span></div>
     <div id="taskbar-spacer"></div>
-    <div id="mute-btn"><img id="mute-icon" src="https://img.icons8.com/fluency/48/000000/medium-volume.png" alt="Mute"/></div>
-    <div id="taskbar-time"></div>
+    <div id="taskbar-right">
+      <div id="mute-btn"><img id="mute-icon" src="assets/speaker.png" alt="Mute"/></div>
+      <div id="taskbar-time"></div>
+    </div>
     <div id="settings-btn"><img src="https://img.icons8.com/fluency/48/000000/settings.png" alt="Settings"/></div>
   </div>
 
@@ -541,21 +629,18 @@
     function createDesktopIcons() {
       const desktop = document.getElementById('desktop');
       desktop.innerHTML = ''; // Clear existing icons
-      Object.keys(iconMap).forEach(key => {
-        const icon = document.createElement('div');
-        icon.className = 'icon';
-        icon.dataset.open = `${key}-window`;
-        icon.innerHTML = `
-          <img src="${iconMap[key]}" alt="${key}" />
-          <span>${key.charAt(0).toUpperCase() + key.slice(1).replace('-', ' ')}</span>
-        `;
-        desktop.appendChild(icon);
-      });
 
-      // Add click event listeners to the icons
-      document.querySelectorAll('.icon').forEach(ic => {
-        ic.onclick = () => openWindow(ic.dataset.open);
-      });
+      const icon = document.createElement('div');
+      icon.className = 'icon';
+      icon.dataset.open = 'project-works-window';
+      icon.innerHTML = `
+        <img src="https://i.ibb.co/tZPbS79/95.png" alt="Public Works" />
+        <span>Public Works</span>
+      `;
+      desktop.appendChild(icon);
+
+      // Add click event listener to open the window
+      icon.onclick = () => openWindow(icon.dataset.open);
     }
 
     // Ensure uniform icons in the start menu
@@ -572,6 +657,16 @@
         `;
         ul.appendChild(li);
       });
+
+      // Add the gallery link
+      const galleryLi = document.createElement('li');
+      galleryLi.dataset.open = 'gallery-window';
+      galleryLi.innerHTML = `
+        <img src="https://via.placeholder.com/16" alt="Gallery" />
+        <span>Gallery</span>
+      `;
+      galleryLi.onclick = () => openWindow('gallery-window');
+      ul.appendChild(galleryLi);
 
       // Add click event listeners to the menu items
       document.querySelectorAll('#start-menu li').forEach(li => {
@@ -616,10 +711,20 @@
 
         const menuBar = document.createElement('div');
         menuBar.className = 'menu-bar';
-        ['File', 'Edit', 'View', 'Help'].forEach(menu => {
-          const menuItem = document.createElement('div');
-          menuItem.textContent = menu;
-          menuBar.appendChild(menuItem);
+        const menuItems = ['Projects', 'Companies', 'Gallery', 'Contact', 'Help', 'FAQs'];
+        menuItems.forEach(menu => {
+          if (menu.toLowerCase() !== id) { // Prevent link to the same dialogue box
+            const menuItem = document.createElement('div');
+            menuItem.textContent = menu;
+            menuItem.onclick = () => {
+              if (menu === 'Projects') openWindow('project-works-window');
+              else if (menu === 'FAQs') openWindow('settings-window');
+              else if (menu === 'Help') openWindow('help-window');
+              else if (menu === 'Gallery') openWindow('gallery-window');
+              else openWindow(menu.toLowerCase() + '-window');
+            };
+            menuBar.appendChild(menuItem);
+          }
         });
         win.appendChild(menuBar);
 
@@ -649,20 +754,134 @@
           win.style.zIndex = ++zIndexCounter;
         });
       });
+
+      // Create the gallery dialogue box
+      const galleryWin = document.createElement('div');
+      galleryWin.id = 'gallery-window';
+      galleryWin.className = 'window';
+      galleryWin.style.width = '450px'; // Match other dialogue box width
+      galleryWin.style.height = '350px'; // Match other dialogue box height
+      galleryWin.style.zIndex = ++zIndexCounter;
+
+      const galleryTitle = document.createElement('div');
+      galleryTitle.className = 'win-title';
+      galleryTitle.innerHTML = `<span>Gallery</span>`;
+      const galleryTools = document.createElement('div');
+      galleryTools.className = 'title-tools';
+      ['_','☐','×'].forEach(sym => {
+        const btn = document.createElement('div');
+        btn.className = 'btn';
+        btn.textContent = sym;
+        if (sym === '_') btn.onclick = () => minimize('gallery-window');
+        if (sym === '☐') btn.onclick = () => maximize('gallery-window');
+        if (sym === '×') btn.onclick = () => closeWindow('gallery-window');
+        galleryTools.appendChild(btn);
+      });
+      galleryTitle.appendChild(galleryTools);
+      galleryWin.appendChild(galleryTitle);
+
+      const menuBar = document.createElement('div');
+      menuBar.className = 'menu-bar';
+      ['Projects', 'Companies', 'Gallery', 'Contact', 'Help', 'FAQs'].forEach(menu => {
+        const menuItem = document.createElement('div');
+        menuItem.textContent = menu;
+        menuItem.onclick = () => {
+          if (menu === 'FAQs') openWindow('settings-window'); // Redirect FAQ to settings dialogue box
+          else openWindow(menu.toLowerCase() + '-window');
+        };
+        menuBar.appendChild(menuItem);
+      });
+      galleryWin.appendChild(menuBar);
+
+      const galleryContent = document.createElement('div');
+      galleryContent.className = 'window-content';
+      galleryContent.style.height = 'calc(100% - 72px)'; // Match content height of other dialogue boxes
+      galleryContent.innerHTML = `
+        <h3>Gallery</h3>
+        <p>Explore our collection of retro-inspired projects and designs.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <img src="https://via.placeholder.com/100" alt="Gallery Image 1" style="width: 100px; height: 100px;">
+          <img src="https://via.placeholder.com/100" alt="Gallery Image 2" style="width: 100px; height: 100px;">
+          <img src="https://via.placeholder.com/100" alt="Gallery Image 3" style="width: 100px; height: 100px;">
+        </div>
+      `;
+      galleryWin.appendChild(galleryContent);
+
+      const galleryStatusBar = document.createElement('div');
+      galleryStatusBar.className = 'window-status';
+      galleryStatusBar.textContent = 'Ready';
+      galleryWin.appendChild(galleryStatusBar);
+
+      galleryWin.style.borderBottom = '2px solid var(--border-shade)'; // Match bottom border with project works
+      document.body.appendChild(galleryWin);
+      makeWindowDraggable(galleryWin);
+    }
+
+    function makeWindowDraggable(win) {
+      let isDragging = false;
+      let offsetX, offsetY;
+
+      const titleBar = win.querySelector('.win-title');
+      titleBar.onmousedown = e => {
+        isDragging = true;
+        offsetX = e.clientX - win.offsetLeft;
+        offsetY = e.clientY - win.offsetTop;
+
+        document.onmousemove = moveEvent => {
+          if (isDragging) {
+            win.style.left = `${moveEvent.clientX - offsetX}px`;
+            win.style.top = `${moveEvent.clientY - offsetY}px`;
+          }
+        };
+
+        document.onmouseup = () => {
+          isDragging = false;
+          document.onmousemove = null;
+          document.onmouseup = null;
+        };
+      };
+
+      // Prevent text selection while dragging
+      titleBar.onselectstart = () => false;
     }
 
     function buildStandardDialog(id) {
       const container = document.getElementById(id + '-content');
       container.style.display = 'flex';
       container.style.flexDirection = 'column';
-      container.style.justifyContent = 'space-between'; // Ensure content fills the viewport
+      container.style.justifyContent = 'flex-start'; // Align content to the top
       container.style.height = '100%'; // Occupy full height of the window
+      container.style.overflowY = 'scroll'; // Enable vertical scrolling
 
       data[id].forEach(item => {
         const h3 = document.createElement('h3');
         h3.textContent = item.title;
+
         const p = document.createElement('p');
-        p.textContent = item.description;
+        if (id === 'help' && item.title === 'Contact Support') {
+          // Add a link to open the contact dialogue box
+          const link = document.createElement('a');
+          link.href = '#';
+          link.textContent = item.description;
+          link.onclick = e => {
+            e.preventDefault();
+            openWindow('contact-window');
+          };
+          p.appendChild(link);
+        } else if (id !== 'contact' && item.title !== 'Contact Support') {
+          // Add links to other dialogue boxes
+          const link = document.createElement('a');
+          link.href = '#';
+          link.textContent = item.description;
+          link.onclick = e => {
+            e.preventDefault();
+            openWindow(item.title.toLowerCase().replace(/\s+/g, '-') + '-window');
+          };
+          p.appendChild(link);
+        } else {
+          p.textContent = item.description;
+        }
+
         container.appendChild(h3);
         container.appendChild(p);
       });
@@ -709,33 +928,26 @@
       document.getElementById('search-btn').onclick     = runSearch;
       document.getElementById('search-input').onkeypress = e => { if (e.key === 'Enter') runSearch(); };
     }
-
     function buildProjectWorksDialog() {
-      const c = document.getElementById('project-works-content');
-      c.style.display = 'flex';
-      c.style.flexWrap = 'wrap';
-      c.style.gap = '16px';
-      c.style.justifyContent = 'flex-start';
-      c.style.alignItems = 'flex-start';
-      c.style.padding = '16px';
+  const c = document.getElementById('project-works-content');
+  c.innerHTML = '';       // clear previous
 
-      const projects = [
-        { id: 'alpha', label: 'Alpha' },
-        { id: 'bravo', label: 'Bravo' },
-        { id: 'charlie', label: 'Charlie' }
-      ];
+  const projects = [
+    { id: 'alpha',   label: 'Alpha'   },
+    { id: 'bravo',   label: 'Bravo'   },
+    { id: 'charlie', label: 'Charlie' }
+  ];
 
-      projects.forEach(project => {
-        const folder = document.createElement('div');
-        folder.className = 'icon';
-        folder.style.cursor = 'pointer';
-        folder.innerHTML = `
-          <img src="https://i.ibb.co/tZPbS79/95.png" alt="${project.label}" />
-          <span>${project.label}</span>
-        `;
-        folder.onclick = () => openProjectDialogueBox(project.id, project.label);
-        c.appendChild(folder);
-      });
+  projects.forEach(p => {
+    const folder = document.createElement('div');
+    folder.className = 'icon';
+    folder.innerHTML = `
+      <img src="https://i.ibb.co/tZPbS79/95.png" alt="${p.label}" />
+      <span>${p.label}</span>
+    `;
+    folder.onclick = () => openProjectDialogueBox(p.id, p.label);
+    c.appendChild(folder);
+  });
 
       // Adjust checkout button position to bottom right
       const buttonContainer = document.createElement('div');
@@ -789,9 +1001,10 @@
 
       const menuBar = document.createElement('div');
       menuBar.className = 'menu-bar';
-      ['File', 'Edit', 'View', 'Help'].forEach(menu => {
+      ['Projects', 'Companies', 'Gallery', 'Contact', 'Help', 'FAQs'].forEach(menu => {
         const menuItem = document.createElement('div');
         menuItem.textContent = menu;
+        menuItem.onclick = () => openWindow(menu.toLowerCase() + '-window');
         menuBar.appendChild(menuItem);
       });
       win.appendChild(menuBar);
@@ -813,6 +1026,8 @@
       win.appendChild(statusBar);
 
       document.body.appendChild(win);
+
+      makeWindowDraggable(win); // Make the subfolder dialogue box draggable
       openWindow(`${projectId}-window`);
     }
 
@@ -901,29 +1116,6 @@
       document.getElementById('taskbar-spacer').before(btn);
     }
 
-    function makeWindowDraggable(win) {
-      let isDragging = false;
-      let offsetX, offsetY;
-
-      const titleBar = win.querySelector('.win-title');
-      titleBar.onmousedown = e => {
-        isDragging = true;
-        offsetX = e.clientX - win.offsetLeft;
-        offsetY = e.clientY - win.offsetTop;
-        document.onmousemove = moveEvent => {
-          if (isDragging) {
-            win.style.left = `${moveEvent.clientX - offsetX}px`;
-            win.style.top = `${moveEvent.clientY - offsetY}px`;
-          }
-        };
-        document.onmouseup = () => {
-          isDragging = false;
-          document.onmousemove = null;
-          document.onmouseup = null;
-        };
-      };
-    }
-
     document.getElementById('start-btn').onclick = e => {
       e.stopPropagation();
       const m = document.getElementById('start-menu');
@@ -939,7 +1131,7 @@
       muted = !muted;
       document.getElementById('mute-icon').src = muted
         ? 'https://img.icons8.com/fluency/48/000000/mute.png'
-        : 'https://img.icons8.com/fluency/48/000000/medium-volume.png';
+        : 'assets/speaker.png';
     };
 
     setInterval(() => {
